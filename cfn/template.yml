@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Transform: "AWS::Serverless-2016-10-31"
+
+Description: "Create SQS Standard Queue and Lambda Function"
+
+Resources:
+  QueueForLambda:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "ff979bcd-c9c9-4ca8-9c63-0341b190876d"
+
+  LambdaFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: LambdaFunctionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:*
+                Resource: '*'
+
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: QueueForLambda
+    Properties:
+      Handler: index.handler
+      Runtime: python3.8
+      Role: !GetAtt LambdaFunctionRole.Arn
+      #  TODO    CodeUri: lambda/.
+      Code:
+        ZipFile: |
+          import boto3
+          from datetime import datetime
+          import json
+
+
+          # def send_message():
+          sqs = boto3.client('sqs')
+          queue_url = sqs.get_queue_url(QueueName="ff979bcd-c9c9-4ca8-9c63-0341b190876d")
+          # print("sqsURL" + str(queue_url))
+          date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+          message = {"date": date}
+          response = sqs.send_message(
+              QueueUrl=queue_url['QueueUrl'],
+              MessageBody=json.dumps(message)
+          )
+          print(message)
+
+
+          def handler(event, context):
+              return {
+                  'body': event
+              }
+
+
+Outputs:
+  QueueURL:
+    Description: "URL of new Amazon SQS Queue"
+    Value:
+      Ref: "QueueForLambda"
+
+  QueueName:
+    Description: "Name new Amazon SQS Queue"
+    Value:
+      Fn::GetAtt:
+        - "QueueForLambda"
+        - "QueueName"
+
+
