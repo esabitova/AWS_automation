@@ -10,7 +10,6 @@ Resources:
     Properties:
       QueueName: "SQSQueueForLambda"
 
-#TODO: learn more about roles. Think about sqs:* - may be it's not correct for challenge
   LambdaFunctionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -31,7 +30,9 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  #TODO: add sqs invoke policy
                   - sqs:*
+                # - sqs:SendMessage
                 Resource: '*'
 
 
@@ -39,8 +40,10 @@ Resources:
     Type: AWS::Lambda::Function
     DependsOn: QueueForLambda
     Properties:
+      FunctionName: "SendMessagesLambda"
       Handler: index.handler
       Runtime: python3.8
+      Timeout: 25
       Role: !GetAtt LambdaFunctionRole.Arn
       #  TODO    CodeUri: lambda/.
       Code:
@@ -50,21 +53,13 @@ Resources:
 
           sqs = boto3.client('sqs')
           queue_url = sqs.get_queue_url(QueueName="SQSQueueForLambda")
-          print("sqsURL" + str(queue_url))
-          date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-
-          response = sqs.send_message(
-              QueueUrl=queue_url['QueueUrl'],
-              MessageBody=date
-          )
-          print(date)
-
+          date = datetime.utcnow().now().strftime("%d/%m/%Y %H:%M:%S.%f")
 
           def handler(event, context):
-              return {
-                  'body': event
-              }
-
+              response = sqs.send_message(
+                  QueueUrl=queue_url['QueueUrl'],
+                  MessageBody=date
+              )
 
 #TODO: this part may be should be deleted
 Outputs:
