@@ -4,7 +4,7 @@ import boto3
 from cfn_tools import load_yaml, dump_yaml
 
 
-text = open('./cfn/template.yml').read()
+text = open('./packaged-template.yml').read()
 data = load_yaml(text)
 
 
@@ -54,6 +54,6 @@ def cloudWatch():
 
 
 if __name__ == '__main__':
-    # createCfn()
+    createCfn()
     # invokeLambda()
-    cloudWatch()
+    # cloudWatch()

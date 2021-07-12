@@ -25,7 +25,8 @@ ENV_NAME="elasticbeanstalk-environment-name"
 
 
 package_command:
-	aws cloudformation package --template cfn/template.yml --s3-bucket $(BUCKET_NAME) --output yml > packaged-template.yml
+	#aws cloudformation package --template cfn/template.yml --s3-bucket $(BUCKET_NAME) --output yml > packaged-template.yml
+	aws cloudformation package --template .\cfn\template.yml --s3-bucket bucketfortemplate --output-template-file packaged-template.yml
 
 
 
