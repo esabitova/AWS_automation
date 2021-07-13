@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+import time
+from datetime import datetime, timedelta, date
 
 import boto3
 from cfn_tools import load_yaml, dump_yaml
@@ -17,6 +18,11 @@ def createCfn():
             'CAPABILITY_AUTO_EXPAND', 'CAPABILITY_IAM'
         ]
     )
+    waiter = client.get_waiter('stack_create_complete')
+    waiter.wait(
+        StackName='AWS-challenge-task'
+    )
+    print(waiter)
 
 
 def invokeLambda():
@@ -26,9 +32,11 @@ def invokeLambda():
         response = client.invoke(
             FunctionName='SendMessagesLambda',
             InvocationType='Event',
-            Payload='{}'
+            # Payload='{}'
         )
         print(response)
+    time.sleep(180)
+
 
 
 def cloudWatch():
@@ -40,20 +48,21 @@ def cloudWatch():
         Dimensions=[
             {'Name': 'QueueName', 'Value': 'SQSQueueForLambda'}
         ],
-        StartTime=datetime.now() - timedelta(hours=3),
-        EndTime=datetime.now(),
-        Period=60,
+        StartTime=datetime.utcnow()-timedelta(minutes=5),
+        EndTime=datetime.utcnow(),
+        Period=300,
         Statistics=['Sum'],
         Unit='Count'
     )
 
     for i in response['Datapoints']:
         count = (i['Sum'])
-
+    print(count)
     return count
 
 
 if __name__ == '__main__':
-    createCfn()
-    # invokeLambda()
-    # cloudWatch()
+    # createCfn()
+    invokeLambda()
+    cloudWatch()
+
