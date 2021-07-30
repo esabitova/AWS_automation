@@ -1,6 +1,6 @@
 VERSION=$(shell git rev-parse --short HEAD)
 DESC=$(shell git log -1 --pretty=%B)
-BUCKET_NAME="my-bucket"
+BUCKET_NAME="bucketfortemplate"
 PROJECT_NAME="AWS_automation"
 REGION="eu-west-2"
 ENV_NAME="elasticbeanstalk-environment-name"
@@ -25,8 +25,8 @@ ENV_NAME="elasticbeanstalk-environment-name"
 
 
 package_command:
-	#aws cloudformation package --template cfn/template.yml --s3-bucket $(BUCKET_NAME) --output yml > packaged-template.yml
-	aws cloudformation package --template .\cfn\template.yml --s3-bucket bucketfortemplate --output-template-file packaged-template.yml
+	#aws cloudformation package --template cfn/template.yml --s3-bucket $(BUCKET_NAME) --output yml > _packaged-template.yml
+	aws cloudformation package --template .\cfn\template.yml --s3-bucket $(BUCKET_NAME) --output-template-file .\cfn\packaged-template.yml
 
 
 
