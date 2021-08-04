@@ -47,18 +47,18 @@ Resources:
       Code: lambda/index.py
 
 
-#TODO: this part may be should be deleted
-Outputs:
-  QueueURL:
-    Description: "URL of new Amazon SQS Queue"
-    Value:
-      Ref: "QueueForLambda"
-
-  QueueName:
-    Description: "Name new Amazon SQS Queue"
-    Value:
-      Fn::GetAtt:
-        - "QueueForLambda"
-        - "QueueName"
+##TODO: this part may be should be deleted
+#Outputs:
+#  QueueURL:
+#    Description: "URL of new Amazon SQS Queue"
+#    Value:
+#      Ref: "QueueForLambda"
+#
+#  QueueName:
+#    Description: "Name new Amazon SQS Queue"
+#    Value:
+#      Fn::GetAtt:
+#        - "QueueForLambda"
+#        - "QueueName"
 
 
