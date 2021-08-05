@@ -6,7 +6,7 @@ queue_url = sqs.get_queue_url(QueueName="SQSQueueForLambda")
 
 
 def handler(event, context):
-    date = datetime.utcnow().now().strftime("%d/%m/%Y %H:%M:%S.%f")
+    date = datetime.utcnow().now().strftime("%d/%m/%Y %H:%M:%S")
     response = sqs.send_message(
         QueueUrl=queue_url['QueueUrl'],
         MessageBody=date

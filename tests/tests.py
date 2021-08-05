@@ -1,16 +1,17 @@
 import unittest
 from unittest.mock import MagicMock
 
-import _main
+import main
 
 
 class MyTestCase(unittest.TestCase):
 
     def test_createCfn(self):
-        mock_client = _main.cfn_client
+        mock_client = main.cfn_client
         mock_client.create_stack = MagicMock()
 
-        _main.createCfn()
+        text = 'text from template'
+        main.createCfn(text)
 
         mock_client.create_stack.assert_called()
 
@@ -33,13 +34,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(actual_StackName, expected_StackName)
         self.assertEqual(actual_Capabilities, expected_Capabilities)
 
-        #     TODO: check the response
-
     def test_invokeLambda(self):
-        mock_client = _main.lambda_client
+        mock_client = main.lambda_client
         mock_client.invoke = MagicMock()
 
-        _main.invokeLambda()
+        main.invokeLambda(10)
 
         # check how many times lambda was invoked
         actual_count_calls = mock_client.invoke.call_count
@@ -65,17 +64,17 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(actual_FunctionName, expected_FunctionName)
         self.assertEqual(actual_InvocationType, expected_InvocationType)
 
-    #   TODO: check the response
-
     def test_cloudWatch(self):
         # cloud_watch client
-        mock_client = _main.cw_client
-        mock_client.get_metric_statistics = MagicMock()
+        mock_client = main.cw_client
+        mock_client.get_metric_statistics = MagicMock(
+            return_value={'Label': 'NumberOfMessagesSent', 'Datapoints': [{'Sum': 10.0, 'Unit': 'Count'}],
+                          'ResponseMetadata': {'RequestId': 'd764cfec-e8d0-4f0a-ab18-77e4fb95ef8c',
+                                               'HTTPStatusCode': 200, 'RetryAttempts': 0}}
+        )
 
-        # call the method
-        _main.cloudWatch()
+        main.cloudWatch()
 
-        # check, that client was called
         mock_client.get_metric_statistics.assert_called()
 
         # check arguments without values = all needed arguments was included.
@@ -102,9 +101,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(actual_Namespace, expected_Namespace)
         self.assertEqual(actual_Dimensions, expected_Dimensions)
 
-        print(mock_client.get_metric_statistics.call_args)
-
-        #   TODO: check the response - count?
-        response = 10
-        mock_client.get_metric_statistics = MagicMock(return_value=response)
-        self.assertEqual(mock_client.get_metric_statistics.return_value, response)
+        # check return value
+        result = main.cloudWatch()
+        self.assertEqual(result, 10)
