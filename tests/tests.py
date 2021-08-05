@@ -67,7 +67,11 @@ class MyTestCase(unittest.TestCase):
     def test_cloudWatch(self):
         # cloud_watch client
         mock_client = main.cw_client
-        mock_client.get_metric_statistics = MagicMock()
+        mock_client.get_metric_statistics = MagicMock(
+            return_value={'Label': 'NumberOfMessagesSent', 'Datapoints': [{'Sum': 10.0, 'Unit': 'Count'}],
+                          'ResponseMetadata': {'RequestId': 'd764cfec-e8d0-4f0a-ab18-77e4fb95ef8c',
+                                               'HTTPStatusCode': 200, 'RetryAttempts': 0}}
+        )
 
         main.cloudWatch()
 
@@ -99,4 +103,4 @@ class MyTestCase(unittest.TestCase):
 
         # check return value
         count = main.cloudWatch()
-        self.assertEqual(count, 0)
+        self.assertEqual(count, 10)
