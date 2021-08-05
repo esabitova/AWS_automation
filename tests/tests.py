@@ -102,5 +102,5 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(actual_Dimensions, expected_Dimensions)
 
         # check return value
-        count = main.cloudWatch()
-        self.assertEqual(count, 10)
+        result = main.cloudWatch()
+        self.assertEqual(result, 10)

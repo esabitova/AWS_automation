@@ -5,7 +5,7 @@ import boto3
 from cfn_tools import load_yaml, dump_yaml
 
 
-STACK_NAME = 'AWS-challenge-task2'
+STACK_NAME = 'AWS-challenge-task'
 FUNCTION_NAME = 'SendMessagesLambda'
 TEMPLATE_FILE = './cfn/packaged-template.yml'
 
@@ -30,7 +30,6 @@ def createCfn(text):
             'CAPABILITY_AUTO_EXPAND', 'CAPABILITY_IAM'
         ]
     )
-    print(response)
 
 
 def waitCfn():
@@ -49,7 +48,7 @@ def invokeLambda(num):
 
 
 def cloudWatch():
-    count = 0
+    metrics_result = 0
     currentDate = datetime.utcnow()
     response = cw_client.get_metric_statistics(
         Namespace='AWS/SQS',
@@ -65,9 +64,9 @@ def cloudWatch():
     )
 
     for i in response['Datapoints']:
-        count = (i['Sum'])
+        metrics_result = (i['Sum'])
 
-    return count
+    return metrics_result
 
 
 if __name__ == '__main__':
