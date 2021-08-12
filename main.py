@@ -29,7 +29,7 @@ def createCfn(text):
         StackName='AWS-challenge-task',
         TemplateBody=text,
         Capabilities=[
-            'CAPABILITY_AUTO_EXPAND', 'CAPABILITY_IAM'
+            'CAPABILITY_IAM'
         ]
     )
 

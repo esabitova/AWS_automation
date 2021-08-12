@@ -1,7 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-Transform: "AWS::Serverless-2016-10-31"
-
 Description: "Creates SQS Standard Queue and Lambda Function"
 
 Resources:
@@ -30,10 +28,9 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                 - sqs:SendMessage
-                 - sqs:GetQueueUrl
-                Resource: '*'
-
+                  - sqs:SendMessage
+                  - sqs:GetQueueUrl
+                Resource: 'arn:aws:sqs:*'
 
   LambdaFunction:
     Type: AWS::Lambda::Function
