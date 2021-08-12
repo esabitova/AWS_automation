@@ -1,8 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-Transform: "AWS::Serverless-2016-10-31"
-
-Description: "Create SQS Standard Queue and Lambda Function"
+Description: "Creates SQS Standard Queue and Lambda Function"
 
 Resources:
   QueueForLambda:
@@ -30,10 +28,9 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                 - sqs:SendMessage
-                 - sqs:GetQueueUrl
-                Resource: '*'
-
+                  - sqs:SendMessage
+                  - sqs:GetQueueUrl
+                Resource: 'arn:aws:sqs:*'
 
   LambdaFunction:
     Type: AWS::Lambda::Function
@@ -45,20 +42,5 @@ Resources:
       Timeout: 25
       Role: !GetAtt LambdaFunctionRole.Arn
       Code: lambda/index.py
-
-
-##TODO: this part may be should be deleted
-#Outputs:
-#  QueueURL:
-#    Description: "URL of new Amazon SQS Queue"
-#    Value:
-#      Ref: "QueueForLambda"
-#
-#  QueueName:
-#    Description: "Name new Amazon SQS Queue"
-#    Value:
-#      Fn::GetAtt:
-#        - "QueueForLambda"
-#        - "QueueName"
 
 

@@ -29,7 +29,7 @@ class MyTestCase(unittest.TestCase):
         expected_StackName = 'AWS-challenge-task'
 
         actual_Capabilities = mock_client.create_stack.call_args[1]['Capabilities']
-        expected_Capabilities = ['CAPABILITY_AUTO_EXPAND', 'CAPABILITY_IAM']
+        expected_Capabilities = ['CAPABILITY_IAM']
 
         self.assertEqual(actual_StackName, expected_StackName)
         self.assertEqual(actual_Capabilities, expected_Capabilities)
