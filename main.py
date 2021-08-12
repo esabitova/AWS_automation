@@ -30,7 +30,6 @@ def createCfn(text):
         TemplateBody=text,
         Capabilities=[
             'CAPABILITY_IAM'
-            # 'CAPABILITY_AUTO_EXPAND', 'CAPABILITY_IAM'
         ]
     )
 
